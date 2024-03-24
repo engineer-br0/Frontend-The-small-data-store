@@ -1,9 +1,11 @@
 import React, { useState } from "react";
-import { Table, Button } from "react-bootstrap";
+import { Table, Button, Form } from "react-bootstrap";
 import AddEditCitizenForm from "./CitizenForm";
 
 const CitizenList = ({ citizens, onUpdate, onDelete }) => {
   const [editingCitizen, setEditingCitizen] = useState(null);
+  const [searchInput, setSearchInput] = useState("");
+  const [filterCriteria, setFilterCriteria] = useState("");
 
   const handleUpdateClick = (citizen) => {
     setEditingCitizen(citizen);
@@ -14,8 +16,53 @@ const CitizenList = ({ citizens, onUpdate, onDelete }) => {
     setEditingCitizen(null);
   };
 
+  const handleSearchInputChange = (e) => {
+    setSearchInput(e.target.value);
+  };
+
+  const handleFilterCriteriaChange = (e) => {
+    setFilterCriteria(e.target.value);
+  };
+
+  const filteredCitizens = citizens
+    .filter((citizen) => {
+      const fullName = `${citizen.firstName} ${citizen.lastName}`.toLowerCase();
+      return fullName.includes(searchInput.toLowerCase());
+    })
+    .filter((citizen) => {
+      if (filterCriteria === "") {
+        return true;
+      }
+      return citizen.gender === filterCriteria;
+    });
+
   return (
     <>
+      <Form>
+        <Form.Group controlId="searchInput">
+          <Form.Label>Search by name:</Form.Label>
+          <Form.Control
+            type="text"
+            placeholder="Enter name"
+            value={searchInput}
+            onChange={handleSearchInputChange}
+          />
+        </Form.Group>
+        <Form.Group controlId="filterCriteria">
+          <Form.Label>Filter by gender:</Form.Label>
+          <Form.Control
+            as="select"
+            value={filterCriteria}
+            onChange={handleFilterCriteriaChange}
+          >
+            <option value="">All</option>
+            <option value="Male">Male</option>
+            <option value="Female">Female</option>
+            <option value="Other">Other</option>
+          </Form.Control>
+        </Form.Group>
+      </Form>
+
       <Table striped bordered hover>
         <thead>
           <tr>
@@ -31,7 +78,7 @@ const CitizenList = ({ citizens, onUpdate, onDelete }) => {
           </tr>
         </thead>
         <tbody>
-          {citizens.map((citizen) => (
+          {filteredCitizens.map((citizen) => (
             <tr key={citizen._id}>
               <td>{citizen.firstName}</td>
               <td>{citizen.lastName}</td>
