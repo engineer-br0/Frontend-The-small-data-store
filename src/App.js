@@ -24,8 +24,8 @@ function App() {
   const handleSubmit = async (formData) => {
     try {
       const apiUrl = formData._id
-        ? `http://localhost:4000/citizens/${formData._id}`
-        : "http://localhost:4000/citizens";
+        ? `https://backend-the-small-data-store.onrender.com/citizens/${formData._id}`
+        : "https://backend-the-small-data-store.onrender.com/citizens";
       const method = formData._id ? "PUT" : "POST";
       const response = await axios({
         method: method,
@@ -42,7 +42,7 @@ function App() {
   const handleUpdate = async (citizenId, updatedData) => {
     try {
       const response = await axios.put(
-        `http://localhost:4000/citizens/${citizenId}`,
+        `https://backend-the-small-data-store.onrender.com/citizens/${citizenId}`,
         updatedData
       );
       console.log("Citizen updated successfully:", response.data);
@@ -55,7 +55,7 @@ function App() {
   const handleDelete = async (citizenId) => {
     try {
       const response = await axios.delete(
-        `http://localhost:4000/citizens/${citizenId}`
+        `https://backend-the-small-data-store.onrender.com/citizens/${citizenId}`
       );
       console.log("Citizen deleted successfully:", response.data);
       fetchCitizens(); // Refresh citizen list
